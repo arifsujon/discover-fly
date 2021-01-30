@@ -32,7 +32,7 @@
             <h3>Booking Flights</h3>
             <div class="input-group">
                 <label for="">Flying From</label>
-                <input class="inp-style" type="text" name="" placeholder="Dhake, Bangladesh">
+                <input class="inp-style" type="text" name="" placeholder="Dhaka, Bangladesh">
             </div>
             <div class="input-group">
                 <label for="">Flying To</label>
@@ -41,7 +41,7 @@
             <div class="inputs">
                 <div class="input-group">
                     <label" for="">Departure</label>
-                    <input class="inp-style" type="date" name="">
+                        <input class="inp-style" type="date" name="">
                 </div>
                 <div class="input-group">
                     <label for="">Return</label>
@@ -51,20 +51,21 @@
             <div class="input-group f-class">
                 <div>
                     <label for="">First Class ($150)</label>
-                    <input class="inp-style inp-width" type="number" name="">
+                    <input id="first-count" class="inp-style inp-width" type="number" name="" value="0">
                 </div>
                 <div class="plus-minus-btn">
-                    <p>+ -</p>
+                    <button onclick="handelTicketChange('first', true)">+</button>
+                    <button onclick="handelTicketChange('first', false)" class="button-minus">-</button>
                 </div>
             </div>
-            
             <div class="input-group f-class">
                 <div>
                     <label for="">Economy ($100)</label>
-                    <input class="inp-style inp-width" type="number" name="">
+                    <input id="economy-count" class="inp-style inp-width" type="number" name="" value="0">
                 </div>
                 <div class="plus-minus-btn">
-                    <p> <span>+</span> <span>-</span> </p>
+                    <button onclick="handelTicketChange('economy', true)">+</button>
+                    <button onclick="handelTicketChange('economy', false)" class="button-minus">-</button>
                 </div>
             </div>
             <div class="calculations">
@@ -73,16 +74,15 @@
                         <p>Subtotal</p>
                     </div>
                     <div class="right">
-                        <p>$500</p>
+                        <p id="total-price">$0</p>
                     </div>
                 </div>
-
                 <div class="amount">
                     <div class="left">
                         <p>Charge 10% VAT</p>
                     </div>
                     <div class="right">
-                        <p>$50</p>
+                        <p id="tax-amount">$0</p>
                     </div>
                 </div>
                 <hr>
@@ -91,20 +91,70 @@
                         <h4>Total</h4>
                     </div>
                     <div class="right">
-                        <p>$550</p>
+                        <p id="grand-total">$0</p>
                     </div>
                 </div>
             </div>
-            <button class="btn-style">Book Now</button>
+            <button onclick="getConfirmation()" class="btn-style">Book Now</button>
         </div>
 
         <div class="booking-content">
             <h1>discover <br> around the world</h1>
             <p>Lorem ipsum dolor sit amet consectetur adipisicingelit. Provident voluptatibus quam fuga laborumalias veniam libero autem quasi maxime ullam vero nama imi dolor, architecto ab facilis eaque deserunt nobise voluptatibus quam</p>
         </div>
-    </section>
-
-    <!--Thank You-->
+    </main> <!--Thank You-->
 </body>
 
+<script>
+    // Calculate Tickets Booking
+    function handelTicketChange(ticket, isIncrease) {
+        const ticketCount = getInputValue(ticket);
+        let ticketNewCount = ticketCount;
+        if (isIncrease == true) {
+            ticketNewCount = ticketCount + 1;
+        }
+        if (isIncrease == false && ticketCount > 0) {
+            ticketNewCount = ticketCount - 1;
+        }
+        document.getElementById(ticket + '-count').value = ticketNewCount;
+        calculateTotal();
+    }
+
+    // Calculate Total Booking Cost
+    function calculateTotal() {
+        const firstCount = getInputValue('first');
+        const economyCount = getInputValue('economy');
+
+        const totalPrice = firstCount * 150 + economyCount * 100;
+        document.getElementById('total-price').innerText = '$' + totalPrice;
+
+        const tax = Math.round(totalPrice * 0.1);
+        document.getElementById('tax-amount').innerText = '$' + tax;
+
+        const grandTotal = totalPrice + tax;
+        document.getElementById('grand-total').innerText = '$' + grandTotal;
+    }
+
+    function getInputValue(ticket) {
+        const ticketInput = document.getElementById(ticket + '-count');
+        const ticketCount = parseInt(ticketInput.value);
+        return ticketCount;
+    }
+
+    // Giving Confirmation Message To User 
+    function getConfirmation() {
+        const bookButton = document.getElementById('grand-total').innerText;
+        const firstInput = document.getElementById('first-count');
+        const economyInput = document.getElementById('economy-count');
+        const bookNow = confirm("You are reserving " + firstInput.value + " first-class ticket/s & " + economyInput.value + " economy-class ticket/s." + " Your total fare is " + bookButton + '.' + " Do you want to continue?");
+        if (bookNow == true) {
+            document.write("Thanks for using our service.");
+            return true;
+        }
+        else {
+            document.write("You didn't confirm your ticket reservation!");
+            return false;
+        }
+    }
+</script>
 </html>
